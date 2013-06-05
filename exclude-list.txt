@@ -1,0 +1,5 @@
+data/*
+.svn
+exclude-list.txt
+live_sync.sh
+.live_sync.lock
