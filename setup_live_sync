@@ -1,15 +1,14 @@
 #!/bin/bash
 ARG1=$1
-LIVE_SYNC_DIRECTORY="/Users/conner/Clockwork/live_sync"
+LIVE_SYNC_DIRECTORY="$HOME/Clockwork/live_sync/live_sync"
 CWD=$(pwd)
 
 if [ -n "$ARG1" ]
 	then
-	cp "$LIVE_SYNC_DIRECTORY/live_sync.sh" "$CWD/"
-	cp "$LIVE_SYNC_DIRECTORY/exclude-list.txt" "$CWD/"
-	echo "$ARG1" > "$CWD/.live_sync_remote"
+	cp -a "$LIVE_SYNC_DIRECTORY" "$CWD/.live_sync"
+	echo "$ARG1" > "$CWD/.live_sync/live_sync_remote"
 	echo "Live Sync Setup"
-	sh live_sync.sh -p
+	live_sync -p
 	exit
 fi
 
