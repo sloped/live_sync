@@ -1,9 +1,19 @@
 #!/bin/bash
 ARG1=$1
-REMOTE=`cat .live_sync_remote`
 CWD=$(pwd)
-LOCAL_LOCK_FILE=$CWD/.live_sync.lock
-GLOBAL_LOCK_FILE=/Users/conner/Clockwork/live_sync/live_sync.lock
+LIVE_SYNC_DIR=$CWD/.live_sync
+
+if [ ! -d $LIVE_SYNC_DIR ]; 
+	then
+	echo "Live Sync Isn't Setup, run live_sync_setup to setup"
+	exit
+else
+REMOTE_FILE=$LIVE_SYNC_DIR/live_sync_remote
+REMOTE=`cat $REMOTE_FILE`
+LOCAL_LOCK_FILE=$LIVE_SYNC_DIR/live_sync.lock
+GLOBAL_LOCK_FILE=/tmp/live_sync.lock
+EXCLUDE_LIST=$LIVE_SYNC_DIR/exclude-list.txt
+fi
 
 if [ "$ARG1" == "-r" ];
 	then
@@ -17,7 +27,7 @@ then
 	growlnotify -m "Live Sync Locked, Cannot Sync to Remotes" -t "Live Sync" -a /Applications/LiveReload.app/
 	exit
 fi
-	rsync -rltvz --exclude=".svn" --exclude-from 'exclude-list.txt' --delete . $REMOTE
+	rsync -rltvz --exclude=".svn" --exclude-from $EXCLUDE_LIST --delete . $REMOTE
 	growlnotify -m "$CWD Synced to $REMOTE" -t "Live Sync" -a /Applications/LiveReload.app/
 	exit
 fi
@@ -25,7 +35,7 @@ fi
 
 if [ "$ARG1" == "-s" ];
 	then
-	rsync -rltvz --exclude=".svn" --exclude-from 'exclude-list.txt' --delete $REMOTE .
+	rsync -rltvz --exclude=".svn" --exclude-from $EXCLUDE_LIST --delete $REMOTE .
 	growlnotify -m "$REMOTE\
 	Synced to\
 	$CWD" -t "Live Sync" -a /Applications/LiveReload.app/
@@ -56,10 +66,16 @@ if [ "$ARG1" == "-k" ]
 	exit
 fi
 
+if [ "$ARG1" == "-p" ]
+	then
+	echo "Syncing To $REMOTE"
+	exit
+fi
+
 cat << EOF
 Live Sync
 Syncs directories using rsync
-usage: live_sync [-r] [-s] [-l] [-u] [-g] [-k]
+usage: live_sync [-r] [-s] [-l] [-u] [-g] [-k] [-p]
 
 Options: 
      -r     Sync to Remote
@@ -68,5 +84,6 @@ Options:
      -u     Unlock Local Directory     
      -g     Lock Globally
      -k     Unlock Globally
+     -p     Print Remote
 EOF
 
