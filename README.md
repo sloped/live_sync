@@ -19,10 +19,12 @@ In my setup I have a directory called bin in my home directory that is included 
 cp live_sync.sh /home/User/bin/live_sync
 cp setup_live_sync /home/User/bin/setup_live_sync
 ```
-Inside a directory you want to sync with the server, run `setup_live_sync`
+Inside a directory you want to sync with the server, run setup_live_sync
 
+```
 setup_live_sync ssh:/path/to/remote/directory/
-````
+```
+
 Be sure to include the final slash, otherwise bad things can happen. Also, check the file .live_sync/exclude-list.txt to verify it matches what your project looks like. 
 
 If this is a brand new directory on the server with no files you can skip the next step. 
