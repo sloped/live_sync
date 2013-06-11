@@ -31,7 +31,7 @@ cd to the directory you wish to work in.
 
 ```
 live_sync -s
-````
+```
 This will copy all the files from the server to your local machine. 
 
 In Live Reload. Create a new location at the directory you created and run setup_live_sync in. Click Options next to Run a custom command after proecessing changes. 
