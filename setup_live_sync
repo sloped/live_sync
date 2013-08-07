@@ -1,14 +1,36 @@
 #!/bin/bash
 ARG1=$1
-LIVE_SYNC_DIRECTORY="$HOME/Clockwork/live_sync/live_sync"
+LIVE_SYNC_DIRECTORY="/Users/conner/Clockwork/live_sync/live_sync"
 CWD=$(pwd)
 
 if [ -n "$ARG1" ]
 	then
 	cp -a "$LIVE_SYNC_DIRECTORY" "$CWD/.live_sync"
+
+	cat > $CWD/.live_sync/watchman_trigger << EOF
+[ "trigger",
+"$CWD",
+"webfiles",
+"*",
+"-X",
+".svn",
+".live_sync",
+"--",
+"live_sync",
+"-r"
+ ]
+EOF
+cat > $CWD/.live_sync/watchman_trigger-del << EOF
+[ "trigger-del",
+"$CWD",
+"webfiles"
+ ]
+EOF
+
+
 	echo "$ARG1" > "$CWD/.live_sync/live_sync_remote"
 	echo "Live Sync Setup"
-	live_sync -p
+	sh live_sync -p
 	exit
 fi
 
